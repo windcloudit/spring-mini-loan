@@ -1,0 +1,44 @@
+version: '2'
+
+# define the network
+networks:
+    web-network:
+        driver: bridge
+
+services:
+    mariadb_dev:
+        container_name: mariadb_dev
+        hostname: mariadb_dev
+        build:
+            context: .
+            dockerfile: ./docker/mariadb/Dockerfile
+        ports:
+            - '3306:3306'
+        volumes:
+            - ./docker/mariadb/db:/var/lib/mysql
+        # connect to the network
+        # corresponds to the "--network" option
+        restart: always
+        networks:
+            - web-network
+        environment:
+            MYSQL_ROOT_PASSWORD: 123123
+            MYSQL_ROOT_HOST: '%'
+            MYSQL_DATABASE: bank_db
+            MYSQL_USER: root
+            MYSQL_PASSWORD: 123123
+        command: >
+            --character-set-server=utf8mb4
+            --collation-server=utf8mb4_unicode_ci
+    myadmin_dev:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin
+        ports:
+            - 8081:80
+        restart: always
+        links:
+            - mariadb_dev:db
+        depends_on:
+            - mariadb_dev
+        networks:
+            - web-network

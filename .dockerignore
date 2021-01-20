@@ -1,0 +1,11 @@
+docker-compose.yml
+Dockerfile
+.dump
+*.dump
+db
+docker-compose.yml.dev
+Jenkinsfile
+php-artisan
+phpunit
+redis-server
+web-server
